@@ -1,0 +1,48 @@
+import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths'
+import solidPlugin from 'vite-plugin-solid';
+import { VitePWA } from 'vite-plugin-pwa'
+import wasm from "vite-plugin-wasm";
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  plugins: [
+    tsconfigPaths(),
+    tailwindcss(),
+    wasm(),
+    solidPlugin(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{js,wasm,css,html,svg}'],
+        navigateFallbackDenylist: [/^\/api/],
+      },
+      manifest: {
+        'short_name': 'Note Mark',
+        'icons': [
+          {
+            'src': '/icon.svg',
+            'type': 'image/svg+xml',
+            'sizes': '150x150'
+          }
+        ],
+        'start_url': '.',
+        'display': 'standalone',
+        'scope': '/',
+        'description': 'Lighting Fast & Minimal Markdown Note Taking App',
+        'shortcuts': [
+          {
+            'name': 'Scratch Pad',
+            'url': '/scratch-pad'
+          },
+        ],
+      },
+    }),
+  ],
+  server: {
+    port: 3000,
+  },
+  build: {
+    target: 'esnext',
+  },
+});

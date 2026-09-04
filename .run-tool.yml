@@ -1,0 +1,47 @@
+targets:
+  deps-frontend:
+    program: "pnpm"
+    args:
+      - i
+    cwd: frontend
+  deps-backend:
+    program: go
+    args:
+      - mod
+      - download
+    cwd: backend
+  build-frontend-wasm:
+    program: pnpm
+    args:
+      - run
+      - wasm
+    cwd: frontend
+  dev-frontend:
+    program: pnpm
+    args:
+      - run
+      - dev
+    cwd: frontend
+    before_hooks:
+      - build-frontend-wasm
+  dev-backend:
+    program: go
+    args:
+      - run
+      - .
+      - serve
+    env_file: .env
+    cwd: backend
+  dev-backend-cli:
+    program: go
+    args:
+      - run
+      - .
+    env_file: .env
+    cwd: backend
+  dev-site:
+    program: hugo
+    args:
+      - serve
+      - -D
+    cwd: site
